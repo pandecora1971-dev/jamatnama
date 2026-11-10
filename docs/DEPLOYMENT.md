@@ -35,7 +35,7 @@ ClamAV needs a long-running host, so it cannot run on Vercel. **Uploads stay in 
 
 ## 3. Supabase
 
-1. Create the project in the same region as Vercel. `vercel.json` uses `sin1` (Singapore), which matches Supabase `ap-southeast-1`. If you choose Mumbai, use `bom1` with `ap-south-1`. Measure from Bangladesh during staging.
+1. Create the project in the same region as Vercel. `vercel.json` uses `bom1` (Mumbai), which matches Supabase `ap-south-1`. If you choose Singapore, use `sin1` with `ap-southeast-1`. Measure from Bangladesh during staging.
 2. **Project Settings → Data API → Exposed schemas:** make sure `jamatnama` is **not** listed. This app does not use the Data API. Disable the Data API entirely if nothing else in the project needs it.
 3. **Project Settings → Database → SSL:** download the CA certificate. Base64-encode it for `DATABASE_CA_CERT`. Turn on **Enforce SSL**.
 4. Save the owner connection string from **Connect → Session pooler** (or Direct) in your password manager. Then, on your own machine, with the variables set only in that shell:

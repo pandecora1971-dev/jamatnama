@@ -74,7 +74,7 @@ R2_BACKUP_BUCKET=jamatnama-evidence-backup npm run r2:backup
 ৩. `vercel.json` আগের অবস্থায় ফেরান, যাতে পরিষ্কারের কাজ প্রতি ১৫ মিনিটে চলে:
 
    ```json
-   { "regions": ["sin1"], "crons": [{ "path": "/api/cron/maintenance", "schedule": "*/15 * * * *" }] }
+   { "regions": ["bom1"], "crons": [{ "path": "/api/cron/maintenance", "schedule": "*/15 * * * *" }] }
    ```
 
 ৪. Vercel প্রজেক্টকে **Pro**-তে নিন।

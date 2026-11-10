@@ -300,7 +300,14 @@ export default function Admin() {
         body: JSON.stringify({ password, code, botToken, username, action: otpPending ? "verify_otp" : "login" }),
       });
       const d = await r.json();
-      if (!r.ok) throw Error(d.error);
+      if (!r.ok) {
+        // An expired or used code needs a fresh bot check, which lives on the first step.
+        if (otpPending && r.status === 400) {
+          setOtpPending(false);
+          setCode("");
+        }
+        throw Error(d.error);
+      }
       if (d.otpRequired) {
         setOtpPending(true);
         setOtpMessage(d.message || "আপনার ইমেইলে ওটিপি পাঠানো হয়েছে।");
