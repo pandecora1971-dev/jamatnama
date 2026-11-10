@@ -46,6 +46,8 @@ export const reportSchema = z
     category: z
       .string()
       .min(1, "ক্যাটাগরি নির্বাচন করুন।")
+      // Bangla ড়/ঢ়/য় can arrive precomposed or with a nukta; the catalog is stored in NFC.
+      .transform((v) => v.normalize("NFC").replace(/\s+/g, " ").trim())
       .refine((v) => categories.includes(v), "সঠিক ক্যাটাগরি নির্বাচন করুন।"),
     title: z
       .string()

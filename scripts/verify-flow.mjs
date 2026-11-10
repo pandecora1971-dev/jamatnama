@@ -288,7 +288,7 @@ try {
   }
   const stats = await visitor.json(`/api/stats?rev=${rev}`);
   assert.equal(stats.data.stats.total, 1);
-  assert.equal(stats.data.stats.metrics[r.category].victim_count, 3);
+  assert.equal(stats.data.stats.metrics[r.category.normalize("NFC")].victim_count, 3);
   const filtered = await visitor.json("/api/reports?q=" + encodeURIComponent("সফটওয়্যার"));
   assert.equal(filtered.data.total, 1);
   const detail = await visitor.json(`/api/reports/${id}?rev=${rev}`);

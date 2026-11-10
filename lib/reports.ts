@@ -63,7 +63,7 @@ function filterSql(filter: ReportFilter, params: unknown[]) {
     params.push(value);
     where.push(sql(`$${params.length}`));
   };
-  if (filter.category) add((s) => `display_category=${s}`, filter.category);
+  if (filter.category) add((s) => `display_category=${s}`, filter.category.normalize("NFC"));
   if (filter.division) add((s) => `division=${s}`, filter.division);
   if (filter.district) add((s) => `district=${s}`, filter.district);
   if (filter.upazila) add((s) => `upazila=${s}`, filter.upazila);

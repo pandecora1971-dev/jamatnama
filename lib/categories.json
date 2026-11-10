@@ -1007,5 +1007,348 @@
       }
     }
   ],
-  "ডিপস্টেট ও আলবদর সংশ্লিষ্টতার অভিযোগ": []
+  "ডিপস্টেট ও আলবদর সংশ্লিষ্টতার অভিযোগ": [],
+  "ইউনুসের দুঃশাসন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "জুলাইয়ের জঙ্গি ও সন্ত্রাসী কর্মকাণ্ডের অভিযোগ": [
+    {
+      "key": "involved_count",
+      "label": "কতজন সন্ত্রাসী বা জঙ্গি জড়িত ছিল?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "ধানমন্ডি ৩২ নম্বরে ভাঙচুরের ঘটনায় জামায়াতের সংশ্লিষ্টতার অভিযোগ": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "মব সৃষ্টি, গণপিটুনি, বাড়িঘর লুটপাট ও অগ্নিসংযোগ": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "মুক্তিযুদ্ধের স্মৃতিচিহ্ন ও ভাস্কর্য ভাঙচুর": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "মুক্তিযোদ্ধাদের হয়রানি ও অবমাননা": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "প্রশাসনিক হয়রানি ও নির্যাতন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন হয়রানি বা মিথ্যা মামলার শিকার হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    },
+    {
+      "key": "case_count",
+      "label": "কতটি মিথ্যা মামলা করা হয়েছে?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টি"
+      }
+    }
+  ],
+  "মাদ্রাসায় বলাৎকার ও যৌন নির্যাতনের অভিযোগ": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "ধর্মীয় উগ্রতা ও জঙ্গিবাদী বক্তব্য": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "দেশ, স্বাধীনতা ও সার্বভৌমত্ব বিরোধী কর্মকাণ্ড": [
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট দপ্তর, প্রতিষ্ঠান বা প্রকল্পের নাম",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    }
+  ],
+  "‘জয় বাংলা’ স্লোগানের জন্য মারধর ও নির্যাতন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন মারধর বা নির্যাতনের শিকার হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "শিক্ষাপ্রতিষ্ঠানে বহিষ্কার ও মব সৃষ্টি": [
+    {
+      "key": "victim_count",
+      "label": "কতজন শিক্ষার্থী বা শিক্ষক ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "মাজার ভাঙচুর ও সাংস্কৃতিক অনুষ্ঠানে মব": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "দলীয়করণ, লুটপাট, অনিয়ম ও স্বজনপ্রীতি": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "কর্মক্ষেত্রে মব সৃষ্টি ও হয়রানি": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "প্রতারণা, জালিয়াতি, নিয়োগ বাণিজ্য ও প্রশ্নফাঁস": [
+    {
+      "key": "loss_amount",
+      "label": "প্রতারণা বা জালিয়াতিতে কত টাকার ক্ষতি হয়েছে?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    },
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট দপ্তর, প্রতিষ্ঠান বা প্রকল্পের নাম",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    }
+  ],
+  "সরকারি সেবায় অনিয়ম ও বরাদ্দ লুটপাট": [
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট দপ্তর, প্রতিষ্ঠান বা প্রকল্পের নাম",
+      "type": "text",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    },
+    {
+      "key": "loss_amount",
+      "label": "আনুমানিক আর্থিক ক্ষতির পরিমাণ কত?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    }
+  ],
+  "সাংবাদিক হত্যা, হয়রানি ও মতপ্রকাশে বাধা": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "দেশবিরোধী চুক্তি ও সংশ্লিষ্টতার অভিযোগ": [
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট দপ্তর, প্রতিষ্ঠান বা প্রকল্পের নাম",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    }
+  ],
+  "সংখ্যালঘুদের ওপর হামলা ও উপাসনালয় ভাঙচুর": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    },
+    {
+      "key": "worship_place_count",
+      "label": "কতটি উপাসনালয় ক্ষতিগ্রস্ত বা ভাঙচুর হয়েছে?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টি"
+      }
+    }
+  ],
+  "জেল হত্যা ও নির্যাতন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "ডিপ স্টেটের সঙ্গে সংশ্লিষ্টতার অভিযোগ": [],
+  "ইতিহাস বিকৃতি, অপপ্রচার ও মিথ্যাচার": [
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট ব্যক্তি, প্রতিষ্ঠান বা মাধ্যমের নাম",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    },
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "জামায়াতে ইসলামী সম্পর্কে সাধারণ মানুষের মতামত ও প্রতিক্রিয়া": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ব্যক্তি প্রতিক্রিয়া জানিয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "হামে শিশু মৃত্যু": [
+    {
+      "key": "victim_count",
+      "label": "কতজন শিশু মারা গেছে?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ]
 }
