@@ -1,0 +1,9 @@
+node_modules
+.next*
+.env*
+!.env.example
+.admin-access.txt
+data
+.category-recovery
+artifacts
+.git

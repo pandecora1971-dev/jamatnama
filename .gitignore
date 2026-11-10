@@ -1,0 +1,64 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Testing and coverage
+/coverage
+
+# Next.js build output
+/.next/
+/out/
+
+# Production build artifacts
+build/
+dist/
+
+# Environment and sensitive credential files
+.env*
+!.env.example
+.admin-access.txt
+.admin-2fa-enrollment.txt
+scanner/.env
+
+# Certificates and keys
+*.pem
+*.crt
+*.key
+*.cert
+
+# Archives and database backups
+*.zip
+*.tar.gz
+*.tgz
+*.bak
+backups/
+/data/
+!public/data/
+*.sqlite
+*.sqlite-*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Internal and temporary project folders
+.local-stack/
+.category-recovery/
+AGENTS.md

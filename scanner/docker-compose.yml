@@ -1,0 +1,35 @@
+# Run from the project root: docker compose -f scanner/docker-compose.yml --env-file scanner/.env up -d
+# scanner/.env holds DATABASE_URL (jamatnama_scanner role), DATABASE_CA_CERT and the R2_* values.
+# Not exercised locally: Docker was unavailable during verification. See docs/DEPLOYMENT.md, step 6.
+services:
+  clamd:
+    image: clamav/clamav:stable
+    restart: unless-stopped
+    volumes:
+      - clamav-db:/var/lib/clamav
+      - ./clamd-limits.conf:/etc/clamav/clamd.conf.d/limits.conf:ro
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/clamdcheck.sh"]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+      start_period: 300s
+  worker:
+    build:
+      context: ..
+      dockerfile: scanner/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      clamd:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_CA_CERT: ${DATABASE_CA_CERT}
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
+      R2_BUCKET: ${R2_BUCKET}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY}
+      CLAMD_HOST: clamd
+      CLAMD_PORT: "3310"
+volumes:
+  clamav-db:

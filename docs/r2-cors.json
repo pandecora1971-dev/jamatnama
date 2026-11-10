@@ -1,0 +1,9 @@
+[
+  {
+    "AllowedOrigins": ["https://YOUR-PRODUCTION-DOMAIN"],
+    "AllowedMethods": ["PUT"],
+    "AllowedHeaders": ["content-type", "if-none-match"],
+    "ExposeHeaders": [],
+    "MaxAgeSeconds": 3600
+  }
+]

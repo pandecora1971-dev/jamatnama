@@ -1,0 +1,1011 @@
+{
+  "মব সৃষ্টি, গণপিটুনি, বাড়িঘর লুটপাট ও অগ্নিসংযোগ": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "খুন, অপহরণ, গুম ও হত্যাচেষ্টা": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "চাঁদাবাজি, টেন্ডারবাজি ও জমি দখল": [
+    {
+      "key": "extortion_amount",
+      "label": "কত টাকা চাঁদা দাবি বা আদায় করা হয়েছে?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    },
+    {
+      "key": "land_amount",
+      "label": "কতটুকু জমি দখল করা হয়েছে?",
+      "type": "text",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "শতক/বিঘা/একর"
+      }
+    },
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট দপ্তর, প্রতিষ্ঠান বা প্রকল্পের নাম",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    },
+    {
+      "key": "loss_amount",
+      "label": "আনুমানিক আর্থিক ক্ষতির পরিমাণ কত?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    }
+  ],
+  "মুক্তিযুদ্ধের স্মৃতি ও ভাস্কর্য ভাঙচুর": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "মুক্তিযোদ্ধাদের হয়রানি ও অবমাননা": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "রাজনৈতিক মামলা": [
+    {
+      "key": "case_count",
+      "label": "মোট কতটি রাজনৈতিক মামলা করা হয়েছে?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টি"
+      }
+    }
+  ],
+  "রাজনৈতিক সহিংসতা": [
+    {
+      "key": "killed_count",
+      "label": "কতজন রাজনৈতিক সহিংসতায় নিহত হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    },
+    {
+      "key": "injured_count",
+      "label": "কতজন রাজনৈতিক সহিংসতায় আহত হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "হত্যা ও নির্যাতন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "সংখ্যালঘু নির্যাতন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "ধর্ষণ, নারী ও শিশু নির্যাতন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "লোডশেডিং, তেল, গ্যাস ও সার সংকট": [
+    {
+      "key": "load_shedding_hours",
+      "label": "দৈনিক গড়ে কত ঘণ্টা লোডশেডিং হয়?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "ঘণ্টা"
+      }
+    }
+  ],
+  "দলীয়করণ, লুটপাট, অনিয়ম ও স্বজনপ্রীতি": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "কর্মক্ষেত্রে মব ও হয়রানি": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "প্রতারণা, জালিয়াতি, নিয়োগ বাণিজ্য ও প্রশ্নফাঁস": [
+    {
+      "key": "loss_amount",
+      "label": "প্রতারণা বা জালিয়াতিতে কত টাকার ক্ষতি হয়েছে?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    },
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট দপ্তর, প্রতিষ্ঠান বা প্রকল্পের নাম",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    }
+  ],
+  "সরকারি সেবায় অনিয়ম ও বরাদ্দ লুটপাট": [
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট দপ্তর, প্রতিষ্ঠান বা প্রকল্পের নাম",
+      "type": "text",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    },
+    {
+      "key": "loss_amount",
+      "label": "আনুমানিক আর্থিক ক্ষতির পরিমাণ কত?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    }
+  ],
+  "সাংবাদিক হত্যাকাণ্ড, হয়রানি ও মতপ্রকাশে বাধা": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "দেশবিরোধী চুক্তি ও সংশ্লিষ্টতা": [
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট দপ্তর, প্রতিষ্ঠান বা প্রকল্পের নাম",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    }
+  ],
+  "ধর্মীয় উগ্রতা ও জঙ্গিবাদী বক্তব্য": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "মাদকসংক্রান্ত অপরাধ": [
+    {
+      "key": "involved_count",
+      "label": "কতজন ব্যক্তি এই ঘটনায় জড়িত?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "ইভ টিজিং ও যৌন হয়রানি": [
+    {
+      "key": "victim_count",
+      "label": "কতজন হয়রানির শিকার হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "কর্মক্ষেত্রে হয়রানি": [
+    {
+      "key": "victim_count",
+      "label": "কতজন কর্মক্ষেত্রে হয়রানির শিকার হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "খুন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন খুন হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "গুম ও অপহরণ": [
+    {
+      "key": "victim_count",
+      "label": "কতজন গুম বা অপহরণের শিকার হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "ঘুষ ও দুর্নীতি": [
+    {
+      "key": "bribery_amount",
+      "label": "ঘুষ বা দুর্নীতির আনুমানিক অর্থমূল্য কত?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    },
+    {
+      "key": "department_name",
+      "label": "দপ্তর বা প্রতিষ্ঠানের নাম কী?",
+      "type": "text",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": ""
+      }
+    }
+  ],
+  "চাঁদাবাজি": [
+    {
+      "key": "extortion_amount",
+      "label": "কত টাকা চাঁদা দাবি বা আদায় করা হয়েছে?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    }
+  ],
+  "জমি দখল": [
+    {
+      "key": "land_amount",
+      "label": "কতটুকু জমি দখল করা হয়েছে?",
+      "type": "text",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "শতক/বিঘা/একর"
+      }
+    }
+  ],
+  "ধর্ষণ": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ধর্ষণের শিকার হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "নারী ও শিশু নির্যাতন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন নির্যাতনের শিকার হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "পরিবেশগত অপরাধ": [
+    {
+      "key": "affected_area",
+      "label": "আনুমানিক কতটুকু এলাকা ক্ষতিগ্রস্ত হয়েছে?",
+      "type": "text",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "এলাকা/পরিমাণ"
+      }
+    }
+  ],
+  "প্রতারণা ও জালিয়াতি": [
+    {
+      "key": "loss_amount",
+      "label": "প্রতারণা বা জালিয়াতিতে কত টাকার ক্ষতি হয়েছে?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    }
+  ],
+  "লোডশেডিং": [
+    {
+      "key": "load_shedding_hours",
+      "label": "দৈনিক গড়ে কত ঘণ্টা লোডশেডিং হয়?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "ঘণ্টা"
+      }
+    }
+  ],
+  "সরকারি সেবায় অনিয়ম": [
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট দপ্তর বা অধিদপ্তরের নাম কী?",
+      "type": "text",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    }
+  ],
+  "সাইবার অপরাধ": [
+    {
+      "key": "victim_count",
+      "label": "কতজন সাইবার অপরাধের শিকার হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "হত্যাচেষ্টা": [
+    {
+      "key": "victim_count",
+      "label": "কতজন হত্যাচেষ্টার শিকার হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "চুরি, ডাকাতি ও ছিনতাই": [
+    {
+      "key": "loss_amount",
+      "label": "আনুমানিক আর্থিক ক্ষতির পরিমাণ কত?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    },
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "মব সৃষ্টি ও গণপিটুনি": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "সংখ্যালঘুদের ওপর নির্যাতন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "মতপ্রকাশে বাধা ও সাংবাদিক হয়রানি": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "দেশবিরোধী চুক্তির অভিযোগ": [
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট প্রতিষ্ঠান, প্রকল্প বা চুক্তির নাম",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    }
+  ],
+  "নিয়োগ বাণিজ্য ও প্রশ্নফাঁস": [
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট প্রতিষ্ঠান, প্রকল্প বা চুক্তির নাম",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    },
+    {
+      "key": "loss_amount",
+      "label": "আনুমানিক আর্থিক ক্ষতির পরিমাণ কত?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    }
+  ],
+  "সরকারি বরাদ্দ ও ত্রাণ লুটপাট": [
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট প্রতিষ্ঠান, প্রকল্প বা চুক্তির নাম",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    },
+    {
+      "key": "loss_amount",
+      "label": "আনুমানিক আর্থিক ক্ষতির পরিমাণ কত?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    }
+  ],
+  "সংখ্যালঘুদের উপর হামলা ও উপাসনালয় ভাঙচুর": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    },
+    {
+      "key": "worship_place_count",
+      "label": "কতটি উপাসনালয় ক্ষতিগ্রস্ত বা ভাঙচুর হয়েছে?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টি"
+      }
+    }
+  ],
+  "ইন্টারনেট শাটডাউন ও ডিজিটাল অধিকার লঙ্ঘন": [
+    {
+      "key": "shutdown_hours",
+      "label": "কত ঘণ্টা বা কত দিন ইন্টারনেট বন্ধ ছিল?",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "ঘণ্টা/দিন"
+      }
+    },
+    {
+      "key": "affected_area",
+      "label": "কোন এলাকায় বা কোন প্ল্যাটফর্মে সেবা বন্ধ ছিল?",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "এলাকা/প্ল্যাটফর্ম"
+      }
+    }
+  ],
+  "টেন্ডারবাজি": [
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট প্রতিষ্ঠান, প্রকল্প বা চুক্তির নাম",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    },
+    {
+      "key": "loss_amount",
+      "label": "আনুমানিক আর্থিক ক্ষতির পরিমাণ কত?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    }
+  ],
+  "বিএনপির দুঃশাসন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "পুলিশ হত্যা সম্পর্কিত তথ্য": [
+    {
+      "key": "victim_count",
+      "label": "কতজন পুলিশ সদস্য নিহত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "জুলাই জঙ্গি ও সন্ত্রাসী": [
+    {
+      "key": "involved_count",
+      "label": "কতজন সন্ত্রাসী বা জঙ্গি জড়িত ছিল?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "নাশকতা ও অগ্নিসন্ত্রাস": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    },
+    {
+      "key": "loss_amount",
+      "label": "আনুমানিক আর্থিক ক্ষতির পরিমাণ কত?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    }
+  ],
+  "হাম শিশু মৃত্যু": [
+    {
+      "key": "victim_count",
+      "label": "কতজন শিশু মারা গেছে?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "'জয় বাংলা' স্লোগানের জন্য মারধর ও নির্যাতন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন মারধর বা নির্যাতনের শিকার হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "শিক্ষা প্রতিষ্ঠানে বহিষ্কার ও মব": [
+    {
+      "key": "victim_count",
+      "label": "কতজন শিক্ষার্থী বা শিক্ষক ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "অন্যান্য বিষয়াদি": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "প্রশাসনিক হয়রানি ও মিথ্যা মামলা": [
+    {
+      "key": "victim_count",
+      "label": "কতজন হয়রানি বা মিথ্যা মামলার শিকার হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    },
+    {
+      "key": "case_count",
+      "label": "কতটি মিথ্যা মামলা করা হয়েছে?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টি"
+      }
+    }
+  ],
+  "ইতিহাস বিকৃতি ও মিথ্যাচার": [
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট ব্যক্তি, প্রতিষ্ঠান বা মাধ্যমের নাম",
+      "type": "text",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "নাম"
+      }
+    },
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "হাম ও শিশু মৃত্যু": [
+    {
+      "key": "victim_count",
+      "label": "কতজন শিশু মারা গেছে?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "বিএনপি সম্পর্কে সাধারণ মানুষের প্রতিক্রিয়া": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ব্যক্তি প্রতিক্রিয়া জানিয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "জয় বাংলা' স্লোগানের জন্য মারধর ও নির্যাতন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন মারধর বা নির্যাতনের শিকার হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "গণহত্যা ও নির্যাতন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "লোডশেডিং, তেল ও গ্যাস সংকট": [
+    {
+      "key": "load_shedding_hours",
+      "label": "দৈনিক গড়ে কত ঘণ্টা লোডশেডিং হয়?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "ঘণ্টা"
+      }
+    }
+  ],
+  "সাংবাদিক হয়রানি ও মতপ্রকাশে বাধা": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "প্রশাসনিক দুর্নীতি, বাণিজ্য ও প্রশাসনিক হয়রানি": [
+    {
+      "key": "bribery_amount",
+      "label": "ঘুষ বা দুর্নীতির আনুমানিক অর্থমূল্য কত?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    },
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট দপ্তর, প্রতিষ্ঠান বা প্রকল্পের নাম",
+      "type": "text",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": ""
+      }
+    }
+  ],
+  "বলৎকার, ধর্ষণ, নারী ও শিশু নির্যাতন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "সাংবাদিক হত্যা, হয়রানি ও মতপ্রকাশে বাধা": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "ধর্ষণ ও পরকীয়াসংক্রান্ত অভিযোগ": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "মওদুদীবাদ ও ইসলাম বিকৃতির অভিযোগ": [],
+  "প্রশাসনিক হয়রানি ও দুর্নীতিতে সংশ্লিষ্টতার অভিযোগ": [
+    {
+      "key": "bribery_amount",
+      "label": "ঘুষ বা দুর্নীতির আনুমানিক অর্থমূল্য কত?",
+      "type": "number",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "টাকা"
+      }
+    },
+    {
+      "key": "department_name",
+      "label": "সংশ্লিষ্ট দপ্তর, প্রতিষ্ঠান বা প্রকল্পের নাম",
+      "type": "text",
+      "options": [],
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": ""
+      }
+    }
+  ],
+  "জেলহত্যা ও নির্যাতন": [
+    {
+      "key": "victim_count",
+      "label": "কতজন ক্ষতিগ্রস্ত হয়েছেন?",
+      "type": "number",
+      "settings": {
+        "required": false,
+        "public": true,
+        "unit": "জন"
+      }
+    }
+  ],
+  "ডিপস্টেট ও আলবদর সংশ্লিষ্টতার অভিযোগ": []
+}

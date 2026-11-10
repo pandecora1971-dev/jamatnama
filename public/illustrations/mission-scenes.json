@@ -1,0 +1,33 @@
+[
+  {
+    "src": "/illustrations/jamat-mission-natural.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "left": 0,
+        "top": 0,
+        "width": 627,
+        "height": 627
+      },
+      {
+        "left": 627,
+        "top": 0,
+        "width": 627,
+        "height": 627
+      },
+      {
+        "left": 0,
+        "top": 627,
+        "width": 627,
+        "height": 627
+      },
+      {
+        "left": 627,
+        "top": 627,
+        "width": 627,
+        "height": 627
+      }
+    ]
+  }
+]
