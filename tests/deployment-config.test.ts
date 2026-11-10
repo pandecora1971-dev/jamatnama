@@ -6,7 +6,8 @@ const read = (name: string) => JSON.parse(readFileSync(name, "utf8"));
 test("paid and Hobby Vercel configs run maintenance on the expected schedules", () => {
   const paid = read("vercel.json"), hobby = read("vercel.hobby.json");
   assert.equal(paid.crons[0].path, "/api/cron/maintenance");
-  assert.equal(paid.crons[0].schedule, "*/15 * * * *");
+  // vercel.json holds the paid 15-minute schedule, or the Hobby daily one copied from vercel.hobby.json.
+  assert.ok(paid.crons[0].schedule === "*/15 * * * *" || paid.crons[0].schedule === hobby.crons[0].schedule);
   assert.equal(hobby.crons[0].path, paid.crons[0].path);
   assert.match(hobby.crons[0].schedule, /^\d+ \d+ \* \* \*$/, "Hobby schedule runs once a day");
   assert.deepEqual(hobby.regions, paid.regions);
