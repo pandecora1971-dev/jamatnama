@@ -105,8 +105,8 @@ The Docker files were **not tested** because Docker was unavailable here. Run th
 
 1. Import the project. Framework: Next.js. Node.js 24. Leave build and output settings at their defaults.
 2. **Settings → Environment Variables** (Production, and Preview pointing at staging only):
-   `PUBLIC_ORIGIN`, `COOKIE_SECURE=true`, `ADMIN_PASSWORD_HASH`, `ADMIN_TOTP_SECRET`, `SESSION_SECRET`, `MFA_ENCRYPTION_KEY`, `CRON_SECRET`, `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `DATABASE_URL`, `DATABASE_CA_CERT`, `DB_POOL_MAX`, `R2_ACCOUNT_ID`, `R2_BUCKET`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`.
-   - Reuse `ADMIN_PASSWORD_HASH` and `ADMIN_TOTP_SECRET` from the current deployment so Super Admin access stays the same.
+   `PUBLIC_ORIGIN`, `COOKIE_SECURE=true`, `ADMIN_PASSWORD_HASH`, `ADMIN_EMAIL`, `RESEND_API_KEY`, `RESEND_FROM`, `SESSION_SECRET`, `MFA_ENCRYPTION_KEY`, `CRON_SECRET`, `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `DATABASE_URL`, `DATABASE_CA_CERT`, `DB_POOL_MAX`, `R2_ACCOUNT_ID`, `R2_BUCKET`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`.
+   - Reuse `ADMIN_PASSWORD_HASH` from the current deployment so the Super Admin password stays the same. The Super Admin login code is emailed through Resend; see docs/ADMIN-TEAM.md.
    - `R2_ACCOUNT_ID` must be present at build time, because the Content Security Policy that permits direct uploads is built from it. Redeploy after changing it.
    - Do **not** add `DATABASE_ADMIN_URL`, `DB_ROLE_PASSWORD` or backup keys.
    - Generate new keys locally: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`. Keep a copy of `MFA_ENCRYPTION_KEY` in your password manager.
@@ -239,7 +239,7 @@ Everything local passed against real PostgreSQL 17 and test doubles, which is **
 
 **Turnstile and MFA**
 - [ ] The real widget loads under the Content Security Policy and server validation passes. A token replayed for a second request fails.
-- [ ] Super Admin signs in with the existing password and authenticator. A migrated moderator signs in with theirs.
+- [ ] Super Admin signs in with the existing password and the emailed code. A migrated moderator signs in with username and password.
 
 **Load**
 - [ ] Repeat the load test against staging with the WAF temporarily adjusted. `scripts/load-test.mjs` only targets its own local servers, so use your preferred tool with the same request mix. Only staging capacity numbers can support a public claim.

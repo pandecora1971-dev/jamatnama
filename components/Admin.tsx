@@ -222,7 +222,8 @@ export default function Admin() {
     [botToken, setBotToken] = useState(""),
     [botReset, setBotReset] = useState(0),
     [code, setCode] = useState(""),
-    [twoFactor, setTwoFactor] = useState(false);
+    [otpPending, setOtpPending] = useState(false),
+    [otpMessage, setOtpMessage] = useState("");
   const [auth, setAuth] = useState<boolean | null>(null),
     [configured, setConfigured] = useState(true),
     [password, setPassword] = useState(""),
@@ -275,7 +276,6 @@ export default function Admin() {
         setRole(d.actor?.role || "");
         setConfigured(d.configured);
         setSiteKey(d.siteKey || "");
-        setTwoFactor(d.twoFactor === true);
       })
       .catch(() => {
         setAuth(false);
@@ -297,10 +297,16 @@ export default function Admin() {
       const r = await fetch("/api/admin/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password, code, botToken, username }),
+        body: JSON.stringify({ password, code, botToken, username, action: otpPending ? "verify_otp" : "login" }),
       });
       const d = await r.json();
       if (!r.ok) throw Error(d.error);
+      if (d.otpRequired) {
+        setOtpPending(true);
+        setOtpMessage(d.message || "আপনার ইমেইলে ওটিপি পাঠানো হয়েছে।");
+        return;
+      }
+      setOtpPending(false);
       setPassword("");
       setCode("");
       setAuth(true);
@@ -341,6 +347,8 @@ export default function Admin() {
         ) : !auth ? (
           <form onSubmit={login} className="admin-login">
             <h1>পর্যালোচক লগইন</h1>
+            {!otpPending ? (
+              <>
                 <label>
                   Username
                   <input
@@ -361,13 +369,6 @@ export default function Admin() {
                     required
                   />
                 </label>
-                {(twoFactor || username.trim().toLowerCase() !== "superadmin") && (
-                  <label>
-                    অথেনটিকেটর কোড
-                    <input value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                      inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" required />
-                  </label>
-                )}
                 <BotCheck siteKey={siteKey} action="admin-login" resetKey={botReset} onToken={setBotToken} />
                 {error && (
                   <p className="error" role="alert">
@@ -380,6 +381,49 @@ export default function Admin() {
                 >
                   {busy ? "যাচাই হচ্ছে…" : "লগইন করুন →"}
                 </button>
+              </>
+            ) : (
+              <>
+                <div style={{ background: "#f0fdf4", border: "1px solid #86efac", padding: "12px", borderRadius: "6px", color: "#166534", marginBottom: "16px", fontSize: "14px" }}>
+                  ✉️ {otpMessage}
+                </div>
+                <label>
+                  ইমেইলে আসা ৬-সংখ্যার ওটিপি (OTP) কোড
+                  <input
+                    value={code}
+                    onChange={(event) =>
+                      setCode(event.target.value.replace(/\D/g, "").slice(0, 6))
+                    }
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    placeholder="যেমন: 123456"
+                    maxLength={6}
+                    required
+                    autoFocus
+                  />
+                </label>
+                {error && (
+                  <p className="error" role="alert">
+                    {error}
+                  </p>
+                )}
+                <button
+                  className="jwr-button"
+                  disabled={busy || code.length !== 6}
+                >
+                  {busy ? "যাচাই হচ্ছে…" : "লগইন সম্পূর্ণ করুন →"}
+                </button>
+                <p style={{ marginTop: "14px", fontSize: "13px" }}>
+                  <button
+                    type="button"
+                    style={{ background: "none", border: "none", color: "#2563eb", cursor: "pointer", textDecoration: "underline", padding: 0 }}
+                    onClick={() => { setOtpPending(false); setCode(""); setError(""); setBotToken(""); setBotReset((value) => value + 1); }}
+                  >
+                    ← আগের ধাপে ফিরে যান
+                  </button>
+                </p>
+              </>
+            )}
           </form>
         ) : (
           <>

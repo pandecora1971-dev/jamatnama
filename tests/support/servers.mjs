@@ -3,6 +3,7 @@
 import { spawn } from "node:child_process";
 import { cpSync, existsSync } from "node:fs";
 import { createServer } from "node:net";
+import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { randomBytes, scryptSync } from "node:crypto";
@@ -28,7 +29,9 @@ export function appEnvironment(stack, ownerPassword = randomBytes(18).toString("
       PUBLIC_ORIGIN,
       SESSION_SECRET: randomBytes(32).toString("hex"),
       ADMIN_PASSWORD_HASH: `${salt}:${scryptSync(ownerPassword, salt, 64).toString("hex")}`,
-      ADMIN_TOTP_SECRET: "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP",
+      RESEND_API_KEY: "re_local_test",
+      ADMIN_EMAIL: "owner@jamatnama.test",
+      TEST_OTP_OUTBOX: path.join(os.tmpdir(), `jamatnama-otp-${process.pid}-${randomBytes(4).toString("hex")}.log`),
       MFA_ENCRYPTION_KEY: randomBytes(32).toString("hex"),
       CRON_SECRET: randomBytes(24).toString("hex"),
       TURNSTILE_SITE_KEY: "local-test-site-key",

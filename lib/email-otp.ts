@@ -1,5 +1,6 @@
+import { randomInt } from "node:crypto";
 import { query } from "./db";
-import { hash, random } from "./security";
+import { hash } from "./security";
 
 export function maskEmail(email: string): string {
   const [user, domain] = email.split("@");
@@ -33,7 +34,7 @@ export async function sendOtpEmail(email: string, code: string): Promise<boolean
             </div>
             <p style="color: #64748b; font-size: 13px;">কোডটির মেয়াদ থাকবে <strong>১০ মিনিট</strong>। আপনি যদি এই লগইনের চেষ্টা না করে থাকেন, তবে এটি উপেক্ষা করুন।</p>
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
-            <p style="color: #94a3b8; font-size: 12px; margin-bottom: 0;">নিরাপত্তা নোটিফিকেশন · jamatnama.digital</p>
+            <p style="color: #94a3b8; font-size: 12px; margin-bottom: 0;">নিরাপত্তা নোটিফিকেশন · jamaatnama.org</p>
           </div>
         `,
       }),
@@ -46,9 +47,8 @@ export async function sendOtpEmail(email: string, code: string): Promise<boolean
 }
 
 export async function createEmailOtp(account: string): Promise<string> {
-  // Generate random 6-digit number
-  const num = Math.floor(100000 + Math.random() * 900000);
-  const code = num.toString();
+  // Random 6-digit code from a cryptographic source
+  const code = randomInt(100000, 1000000).toString();
   const bucketKey = `email_otp:${account}:${hash(code)}`;
   const expires = Date.now() + 10 * 60 * 1000; // 10 minutes
 
@@ -63,6 +63,15 @@ export async function createEmailOtp(account: string): Promise<string> {
   );
 
   return code;
+}
+
+// True while an unexpired code exists for this account (it was requested after a bot check).
+export async function hasPendingEmailOtp(account: string): Promise<boolean> {
+  const { rows } = await query<{ n: number }>(
+    "SELECT 1 AS n FROM jamatnama.rate_limits WHERE bucket LIKE $1 AND expires > $2 LIMIT 1",
+    [`email_otp:${account}:%`, Date.now()],
+  );
+  return rows.length > 0;
 }
 
 export async function verifyEmailOtp(account: string, code: string): Promise<boolean> {

@@ -1,7 +1,6 @@
 import {query,transaction} from '@/lib/db';
 import {currentActor,audit,encodePassword,random,json,sameOrigin,serverFailure} from '@/lib/security';
 import {limitedJson} from '@/lib/uploads';
-import {totpStep} from '@/lib/totp';
 import {sealSecret} from '@/lib/secrets';
 import {LIMITS,requestLimit,throttled} from '@/lib/abuse';
 import {operationsStatus} from '@/lib/evidence';
@@ -29,13 +28,12 @@ export async function POST(req:Request){
    const username=typeof b.username==='string'?b.username.trim().toLowerCase():'';
    if(!/^[a-z0-9_-]{3,40}$/.test(username)||username==='superadmin'||typeof b.password!=='string'||b.password.length<14||b.password.length>128)
     return json({error:'Username এবং কমপক্ষে ১৪ অক্ষরের password সঠিকভাবে দিন।'},400);
-   const secret = typeof b.secret === "string" ? b.secret.replace(/[\s=]/g, "").toUpperCase() : "";
-   if (typeof b.code !== "string" || totpStep(secret, b.code) === null)
-     return json({ error: "Moderator-এর নিজস্ব authenticator key ও বর্তমান কোড দিন।" }, 400);
+   // Moderators sign in with username and password; the stored second-factor slot holds a placeholder.
+   const dummySecret='JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP';
    const encoded=await encodePassword(b.password),id=random();
    try{
     await transaction(async client=>{
-     await client.query('INSERT INTO jamatnama.staff(id,username,totp_secret,password_hash,created_at) VALUES($1,$2,$3,$4,$5)',[id,username,sealSecret(secret),encoded,new Date().toISOString()]);
+     await client.query('INSERT INTO jamatnama.staff(id,username,totp_secret,password_hash,created_at) VALUES($1,$2,$3,$4,$5)',[id,username,sealSecret(dummySecret),encoded,new Date().toISOString()]);
      await audit(actor,'moderator.created',id,username,client);
     });
    }catch(error){

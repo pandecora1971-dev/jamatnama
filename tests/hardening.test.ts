@@ -92,7 +92,8 @@ test("production refuses incomplete security configuration and pins the origin",
   const env = {
     SESSION_SECRET: "x".repeat(32),
     ADMIN_PASSWORD_HASH: "salt:" + "a".repeat(128),
-    ADMIN_TOTP_SECRET: "A".repeat(32),
+    RESEND_API_KEY: "re_test",
+    ADMIN_EMAIL: "owner@example.com",
     PUBLIC_ORIGIN: "https://example.com",
     COOKIE_SECURE: "true",
     TURNSTILE_SITE_KEY: "site",
@@ -106,7 +107,7 @@ test("production refuses incomplete security configuration and pins the origin",
     R2_SECRET_ACCESS_KEY: "secret",
   };
   assert.deepEqual(productionErrors(env), []);
-  for (const missing of ["DATABASE_URL", "MFA_ENCRYPTION_KEY", "CRON_SECRET", "R2_BUCKET"] as const)
+  for (const missing of ["DATABASE_URL", "MFA_ENCRYPTION_KEY", "CRON_SECRET", "R2_BUCKET", "RESEND_API_KEY", "ADMIN_EMAIL"] as const)
     assert.ok(productionErrors({ ...env, [missing]: "" }).some((error) => error.includes(missing)));
   process.env.PUBLIC_ORIGIN = env.PUBLIC_ORIGIN;
   assert.equal(

@@ -10,11 +10,9 @@ export default function TeamPanel(){
  useEffect(()=>{void load();},[page]);
  async function change(body:object){setBusy(true);setError('');try{const r=await fetch('/api/admin/team',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json();if(!r.ok)throw Error(d.error);await load();return true;}catch(e){setError(String(e));return false;}finally{setBusy(false);}}
  return <section className="admin-report"><h2>টিম ও কার্যক্রম — সুপার অ্যাডমিন</h2><p>Moderator রিপোর্ট পর্যালোচনা করতে পারেন। Account ও activity log শুধু আপনি পরিচালনা করবেন।</p>
- <form onSubmit={async e=>{e.preventDefault();const form=e.currentTarget;const f=new FormData(form);if(await change({action:'create',username:f.get('username'),password:f.get('password'),secret:f.get('secret'),code:f.get('code')}))form.reset();}}>
+ <form onSubmit={async e=>{e.preventDefault();const form=e.currentTarget;const f=new FormData(form);if(await change({action:'create',username:f.get('username'),password:f.get('password')}))form.reset();}}>
  <label>Moderator username<input name="username" required pattern="[a-z0-9_-]{3,40}" autoComplete="off" placeholder="যেমন: karim_review"/></label>
  <label>পাসওয়ার্ড (কমপক্ষে ১৪ অক্ষর)<input name="password" type="password" minLength={14} maxLength={128} required autoComplete="new-password" placeholder="কমপক্ষে ১৪ অক্ষর"/></label>
- <label>Moderator-এর পৃথক authenticator key<input name="secret" type="password" required autoComplete="off" maxLength={128}/></label>
- <label>বর্তমান অথেনটিকেটর কোড<input name="code" required inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="one-time-code"/></label>
  <button className="jwr-button" disabled={busy}>Moderator তৈরি করুন</button></form>
  {error&&<p role="alert">{error}</p>}
  {staff.map(s=><p key={s.id}>{s.username} — {s.active?'সক্রিয়':'বন্ধ'} <button disabled={busy} onClick={()=>void change({action:s.active?'disable':'enable',id:s.id})}>{s.active?'অ্যাকাউন্ট বন্ধ করুন':'সক্রিয় করুন'}</button></p>)}

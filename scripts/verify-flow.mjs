@@ -7,7 +7,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 import sharp from "sharp";
 import { startStack } from "../tests/support/stack.mjs";
 import { PUBLIC_ORIGIN, appEnvironment, startServers } from "../tests/support/servers.mjs";
-import { totpCode } from "../lib/totp.ts";
+import { readFileSync } from "node:fs";
 
 // The CSP is fixed at build time, so this port must match R2_ENDPOINT during `npm run build`.
 const stack = await startStack({ publicOrigin: PUBLIC_ORIGIN, r2Port: 54340 });
@@ -49,14 +49,11 @@ class Client {
     return { status: response.status, headers: response.headers, data: await response.json().catch(() => null) };
   }
 }
-const nextStep = new Map();
-function code(identity, secret) {
-  const current = Math.floor(Date.now() / 30000);
-  const step = Math.max(current - 1, (nextStep.get(identity) ?? 0));
-  nextStep.set(identity, step + 1);
-  return totpCode(secret, step);
+// Reads the newest one-time code the test mail sink captured for the Super Admin.
+function latestOtp() {
+  const lines = readFileSync(env.TEST_OTP_OUTBOX, "utf8").trim().split("\n");
+  return JSON.parse(lines.at(-1)).subject.match(/(\d{6})/)[1];
 }
-const OWNER_SECRET = env.ADMIN_TOTP_SECRET;
 const MOD_SECRET = "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ";
 const modPassword = `synthetic-${randomBytes(12).toString("hex")}`;
 const ACCUSED = "সম্পূর্ণ-কাল্পনিক-অভিযুক্ত-" + randomUUID();
@@ -116,20 +113,28 @@ try {
 
   // --- Super Admin and moderator accounts ---
   const owner = new Client(A);
-  assert.equal((await owner.json("/api/admin/session", { method: "POST", body: { password: ownerPassword, username: "superadmin", code: code("owner", OWNER_SECRET) } })).status, 400, "bot check required");
-  nextStep.delete("owner");
+  assert.equal((await owner.json("/api/admin/session", { method: "POST", body: { password: ownerPassword, username: "superadmin" } })).status, 400, "bot check required");
   let login = await owner.json("/api/admin/session", { method: "POST", origin: "https://evil.example", body: {} });
   assert.equal(login.status, 403, "origin check");
-  login = await new Client().json("/api/admin/session", { method: "POST", body: { password: ownerPassword, botToken: "ok:report", code: "000000" } });
+  login = await new Client().json("/api/admin/session", { method: "POST", body: { password: ownerPassword, botToken: "ok:report" } });
   assert.equal(login.status, 400, "bot token for another action is refused");
-  login = await new Client().json("/api/admin/session", { method: "POST", body: { password: ownerPassword, botToken: "ok:admin-login", code: "000000" } });
-  assert.equal(login.status, 401, "owner still needs MFA");
-  login = await owner.json("/api/admin/session", { method: "POST", body: { username: "superadmin", password: ownerPassword, botToken: "ok:admin-login", code: code("owner", OWNER_SECRET) } });
+  assert.equal((await new Client().json("/api/admin/session", { method: "POST", body: { username: "superadmin", password: "wrong-password", action: "verify_otp", code: "000000" } })).status, 400, "the code step skips the bot check only while a code is pending");
+  login = await owner.json("/api/admin/session", { method: "POST", body: { username: "superadmin", password: "wrong-password", botToken: "ok:admin-login" } });
+  assert.equal(login.status, 401, "wrong password sends no code");
+  login = await owner.json("/api/admin/session", { method: "POST", body: { username: "superadmin", password: ownerPassword, botToken: "ok:admin-login" } });
+  assert.equal(login.status, 200, JSON.stringify(login.data));
+  assert.equal(login.data.otpRequired, true, "owner still needs the emailed code");
+  assert.equal((await owner.json("/api/admin/reports")).status, 401, "no session before the code");
+  const ownerOtp = latestOtp();
+  login = await owner.json("/api/admin/session", { method: "POST", body: { username: "superadmin", password: ownerPassword, action: "verify_otp", code: ownerOtp === "000000" ? "111111" : "000000" } });
+  assert.equal(login.status, 401, "a wrong code is refused");
+  login = await owner.json("/api/admin/session", { method: "POST", body: { username: "superadmin", password: ownerPassword, action: "verify_otp", code: ownerOtp }, on: B });
   assert.equal(login.status, 200, JSON.stringify(login.data));
   assert.equal(login.data.actor.role, "superadmin");
-  const created = await owner.json("/api/admin/team", { method: "POST", body: { action: "create", username: "synthetic-mod", password: modPassword, secret: MOD_SECRET, code: totpCode(MOD_SECRET, Math.floor(Date.now() / 30000)) } });
+  assert.equal((await new Client().json("/api/admin/session", { method: "POST", body: { username: "superadmin", password: ownerPassword, action: "verify_otp", code: ownerOtp } })).status, 400, "a used code cannot be replayed");
+  const created = await owner.json("/api/admin/team", { method: "POST", body: { action: "create", username: "synthetic-mod", password: modPassword } });
   assert.equal(created.status, 200, JSON.stringify(created.data));
-  assert.equal((await owner.json("/api/admin/team", { method: "POST", body: { action: "create", username: "synthetic-mod", password: modPassword, secret: MOD_SECRET, code: totpCode(MOD_SECRET, Math.floor(Date.now() / 30000)) } })).status, 409, "a retried create is refused, not duplicated");
+  assert.equal((await owner.json("/api/admin/team", { method: "POST", body: { action: "create", username: "synthetic-mod", password: modPassword } })).status, 409, "a retried create is refused, not duplicated");
   const team = await owner.json("/api/admin/team");
   const modAccount = team.data.staff.find((s) => s.username === "synthetic-mod");
   assert.ok(modAccount.active);
@@ -137,15 +142,11 @@ try {
   const sealed = await owner.json("/api/admin/team");
   assert.equal("totp_secret" in sealed.data.staff[0], false);
   const moderator = new Client(B);
+  assert.equal((await new Client().json("/api/admin/session", { method: "POST", body: { username: "synthetic-mod", password: "wrong-password-123", botToken: "ok:admin-login" } })).status, 401, "wrong moderator password");
   login = await moderator.json("/api/admin/session", { method: "POST", body: { username: "synthetic-mod", password: modPassword, botToken: "ok:admin-login" } });
-  assert.equal(login.status, 401, "moderator needs their own MFA");
-  const firstModCode = code("mod", MOD_SECRET);
-  login = await moderator.json("/api/admin/session", { method: "POST", body: { username: "synthetic-mod", password: modPassword, botToken: "ok:admin-login", code: firstModCode } });
   assert.equal(login.status, 200, JSON.stringify(login.data));
   assert.equal(login.data.actor.role, "moderator");
-  const replayed = await new Client(A).json("/api/admin/session", { method: "POST", body: { username: "synthetic-mod", password: modPassword, botToken: "ok:admin-login", code: firstModCode } });
-  assert.equal(replayed.status, 401, "an MFA code cannot be replayed on another instance");
-  step("each role logs in with its own MFA; replay across instances fails");
+  step("Super Admin needs password plus a single-use emailed code; moderators sign in with username and password");
 
   assert.equal((await moderator.json("/api/admin/team")).status, 403);
   assert.equal((await moderator.json("/api/admin/team", { method: "POST", body: { action: "disable", id: modAccount.id } })).status, 403);
@@ -340,12 +341,12 @@ try {
   assert.equal((await moderator.json("/api/admin/reports", { on: B })).status, 401, "revoked on the other instance immediately");
   assert.equal((await moderator.json("/api/admin/reports", { on: A })).status, 401);
   assert.equal((await moderator.request(`/api/admin/evidence/${cleanedImage.id}`)).status, 401);
-  const blocked = await new Client().json("/api/admin/session", { method: "POST", body: { username: "synthetic-mod", password: modPassword, botToken: "ok:admin-login", code: code("mod", MOD_SECRET) } });
+  const blocked = await new Client().json("/api/admin/session", { method: "POST", body: { username: "synthetic-mod", password: modPassword, botToken: "ok:admin-login" } });
   assert.equal(blocked.status, 401);
   assert.equal((await owner.json("/api/admin/team", { method: "POST", body: { action: "enable", id: modAccount.id } })).status, 200);
   assert.equal((await moderator.json("/api/admin/reports", { on: B })).status, 401, "reactivation does not restore old sessions");
   const back = new Client(B);
-  const relogin = await back.json("/api/admin/session", { method: "POST", body: { username: "synthetic-mod", password: modPassword, botToken: "ok:admin-login", code: code("mod", MOD_SECRET) } });
+  const relogin = await back.json("/api/admin/session", { method: "POST", body: { username: "synthetic-mod", password: modPassword, botToken: "ok:admin-login" } });
   assert.equal(relogin.status, 200, JSON.stringify(relogin.data));
   assert.equal((await back.json("/api/admin/session", { method: "DELETE" })).status, 200);
   assert.equal((await back.json("/api/admin/reports")).status, 401, "logout revokes on the server");
