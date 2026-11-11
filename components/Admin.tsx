@@ -21,6 +21,10 @@ const evidenceStates: Record<string, string> = {
 const evidenceLabel = (mime: string) =>
   mime === "application/pdf" ? "PDF" : mime.startsWith("audio/") ? "অডিও" : mime.startsWith("video/") ? "ভিডিও" : "ছবি";
 const PAGE_SIZE = 25;
+const SESSION_ENDED = "সেশনের মেয়াদ শেষ হয়েছে। নিরাপত্তার জন্য আবার লগইন করুন।";
+/** Local deadline from the server's remaining time, ending a few seconds early to beat network delay. */
+const deadlineFrom = (expiresIn: unknown) =>
+  typeof expiresIn === "number" && expiresIn > 0 ? Date.now() + expiresIn - 5_000 : null;
 function Review({
   report: r,
   evidence,
@@ -235,12 +239,28 @@ export default function Admin() {
     [counts, setCounts] = useState<Record<string, number>>({}),
     [nextCursor, setNextCursor] = useState<string | null>(null);
   const loaded = useRef(PAGE_SIZE);
+  // When the server-side session ends; polling stops here instead of collecting 401s.
+  const [expiresAt, setExpiresAt] = useState<number | null>(null);
+  const expiresRef = useRef<number | null>(null);
+  expiresRef.current = expiresAt;
+  const endSession = useCallback((message = "") => {
+    setAuth(false);
+    setRole("");
+    setExpiresAt(null);
+    setRows([]);
+    setEvidence([]);
+    setError(message);
+  }, []);
   // Refreshes keep every loaded row current without discarding a reviewer's unsaved edits.
   const load = useCallback(async (status: Report["status"]) => {
+    if (expiresRef.current !== null && Date.now() >= expiresRef.current) {
+      endSession(SESSION_ENDED);
+      return;
+    }
     try {
       const res = await fetch(`/api/admin/reports?status=${status}&limit=${Math.min(100, loaded.current)}`, { cache: "no-store" });
       if (res.status === 401) {
-        setAuth(false);
+        endSession(SESSION_ENDED);
         return;
       }
       const d = await res.json();
@@ -253,7 +273,7 @@ export default function Admin() {
     } catch {
       setError("রিপোর্ট তালিকা লোড করা যায়নি।");
     }
-  }, []);
+  }, [endSession]);
   async function loadMore() {
     if (!nextCursor) return;
     try {
@@ -274,6 +294,7 @@ export default function Admin() {
       .then((d) => {
         setAuth(d.authenticated);
         setRole(d.actor?.role || "");
+        setExpiresAt(deadlineFrom(d.expiresIn));
         setConfigured(d.configured);
         setSiteKey(d.siteKey || "");
       })
@@ -289,6 +310,11 @@ export default function Admin() {
     const timer = setInterval(() => void load(tab), 15000);
     return () => clearInterval(timer);
   }, [auth, load, tab]);
+  useEffect(() => {
+    if (!auth || expiresAt === null) return;
+    const timer = setTimeout(() => endSession(SESSION_ENDED), Math.max(0, expiresAt - Date.now()));
+    return () => clearTimeout(timer);
+  }, [auth, expiresAt, endSession]);
   async function login(e: React.SubmitEvent) {
     e.preventDefault();
     setBusy(true);
@@ -316,6 +342,7 @@ export default function Admin() {
       setOtpPending(false);
       setPassword("");
       setCode("");
+      setExpiresAt(deadlineFrom(d.expiresIn));
       setAuth(true);
       setRole(d.actor?.role || "");
     } catch (e) {
@@ -338,9 +365,7 @@ export default function Admin() {
             className="jwr-outline-button"
             onClick={async () => {
               await fetch("/api/admin/session", { method: "DELETE" });
-              setAuth(false);
-              setRows([]);
-              setEvidence([]);
+              endSession();
             }}
           >
             লগআউট

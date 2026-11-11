@@ -1,5 +1,5 @@
 import { query } from "@/lib/db";
-import { currentActor, audit, random, hash, serverFailure } from "@/lib/security";
+import { currentActor, currentSession, audit, random, hash, serverFailure, SUPERADMIN_SESSION_MS, STAFF_SESSION_MS } from "@/lib/security";
 import { cookies } from "next/headers";
 import {
   passwordValid,
@@ -21,18 +21,19 @@ export const dynamic = "force-dynamic";
 // Verified when the account is unknown, so response time does not reveal which usernames exist.
 const requiresBotCheck = () => process.env.NODE_ENV === "production" || process.env.ADMIN_REQUIRE_BOT_CHECK === "true";
 const DECOY_HASH = `decoy:${"0".repeat(128)}`;
-const SESSION_SECONDS = 3600 * 24 * 7;
 
 export async function GET() {
-  let actor = null;
+  let current = null;
   try {
-    actor = await currentActor();
+    current = await currentSession();
   } catch (error) {
     return serverFailure("admin.session", error);
   }
   return json({
-    authenticated: Boolean(actor),
-    actor,
+    authenticated: Boolean(current),
+    actor: current?.actor ?? null,
+    // Relative, so a client clock that differs from the server's cannot shift the sign-out.
+    expiresIn: current ? current.expiresAt - Date.now() : null,
     configured: !!process.env.ADMIN_PASSWORD_HASH,
     emailOtpEnabled: !!process.env.RESEND_API_KEY,
     siteKey: requiresBotCheck() ? process.env.TURNSTILE_SITE_KEY || "" : "",
@@ -75,11 +76,12 @@ export async function POST(req: Request) {
       const jar = await cookies();
       await revokeSession(jar.get("jamatnama_admin")?.value || "");
       await query("DELETE FROM jamatnama.staff_sessions WHERE expires<=$1", [Date.now()]);
-      await query("INSERT INTO jamatnama.staff_sessions(token_hash,staff_id,expires) VALUES($1,$2,$3)", [hash(token), row.id, Date.now() + SESSION_SECONDS * 1000]);
-      jar.set("jamatnama_admin", token, { ...cookieOptions, maxAge: SESSION_SECONDS });
+      const expiresAt = Date.now() + STAFF_SESSION_MS;
+      await query("INSERT INTO jamatnama.staff_sessions(token_hash,staff_id,expires) VALUES($1,$2,$3)", [hash(token), row.id, expiresAt]);
+      jar.set("jamatnama_admin", token, { ...cookieOptions, maxAge: STAFF_SESSION_MS / 1000 });
       const actor = { id: row.id, username: row.username, role: "moderator" as const };
       await audit(actor, "login");
-      return json({ ok: true, actor });
+      return json({ ok: true, actor, expiresIn: STAFF_SESSION_MS });
     }
 
     // Verify Superadmin password
@@ -113,10 +115,10 @@ export async function POST(req: Request) {
     // Login successful
     const jar = await cookies();
     await revokeSession(jar.get("jamatnama_admin")?.value || "");
-    jar.set("jamatnama_admin", await session(), { ...cookieOptions, maxAge: SESSION_SECONDS });
+    jar.set("jamatnama_admin", await session(), { ...cookieOptions, maxAge: SUPERADMIN_SESSION_MS / 1000 });
     const actor = { id: "owner", username: "superadmin", role: "superadmin" as const };
     await audit(actor, "login");
-    return json({ ok: true, actor });
+    return json({ ok: true, actor, expiresIn: SUPERADMIN_SESSION_MS });
   } catch (error) {
     return serverFailure("admin.login", error);
   } finally {

@@ -41,9 +41,14 @@ const credentialVersion = () =>
   sign(
     `credentials:${process.env.ADMIN_PASSWORD_HASH}:${process.env.ADMIN_TOTP_SECRET || ""}`,
   );
+/** Superadmin sessions are short-lived on purpose; moderators keep theirs for a week. */
+export const SUPERADMIN_SESSION_MS = 3600_000;
+export const STAFF_SESSION_MS = 7 * 24 * 3600_000;
+const TOKEN_PATTERN = /^[a-f0-9]{48}$/;
+
 export async function session() {
   const token = random(),
-    expires = Date.now() + 3600_000;
+    expires = Date.now() + SUPERADMIN_SESSION_MS;
   await query("DELETE FROM jamatnama.admin_sessions WHERE expires<=$1", [Date.now()]);
   await query(
     "INSERT INTO jamatnama.admin_sessions(token_hash,expires,credential_version) VALUES($1,$2,$3)",
@@ -51,20 +56,22 @@ export async function session() {
   );
   return token;
 }
-export async function sessionValid(token: string) {
-  if (!/^[a-f0-9]{48}$/.test(token)) return false;
+/** Returns when a live superadmin session ends, or null when the token is not one. */
+async function superadminSessionExpiry(token: string): Promise<number | null> {
+  if (!TOKEN_PATTERN.test(token)) return null;
   const { rows } = await query<{ expires: string; credential_version: string }>(
     "SELECT expires,credential_version FROM jamatnama.admin_sessions WHERE token_hash=$1",
     [hash(token)],
   );
-  return Boolean(
-    rows[0] &&
-      Number(rows[0].expires) > Date.now() &&
-      equal(rows[0].credential_version, credentialVersion()),
-  );
+  const expires = Number(rows[0]?.expires);
+  const live = rows[0] && expires > Date.now() && equal(rows[0].credential_version, credentialVersion());
+  return live ? expires : null;
+}
+export async function sessionValid(token: string) {
+  return (await superadminSessionExpiry(token)) !== null;
 }
 export async function revokeSession(token: string) {
-  if (!/^[a-f0-9]{48}$/.test(token)) return;
+  if (!TOKEN_PATTERN.test(token)) return;
   const key = hash(token);
   await query("DELETE FROM jamatnama.staff_sessions WHERE token_hash=$1", [key]);
   await query("DELETE FROM jamatnama.admin_sessions WHERE token_hash=$1", [key]);
@@ -110,20 +117,34 @@ export function serverFailure(scope: string, error: unknown) {
 
 export type Actor = { id: string; username: string; role: "superadmin" | "moderator" };
 export const SYSTEM_ACTOR: Actor = { id: "public", username: "anonymous", role: "moderator" };
-export async function staffIdentity(token: string): Promise<Actor | null> {
-  if (!/^[a-f0-9]{48}$/.test(token)) return null;
-  const { rows } = await query<{ id: string; username: string }>(
-    "SELECT s.id,s.username FROM jamatnama.staff s JOIN jamatnama.staff_sessions t ON t.staff_id=s.id WHERE t.token_hash=$1 AND t.expires>$2 AND s.active",
+export type ActorSession = { actor: Actor; expiresAt: number };
+const SUPERADMIN: Actor = { id: "owner", username: "superadmin", role: "superadmin" };
+
+async function staffSession(token: string): Promise<ActorSession | null> {
+  if (!TOKEN_PATTERN.test(token)) return null;
+  const { rows } = await query<{ id: string; username: string; expires: string }>(
+    "SELECT s.id,s.username,t.expires FROM jamatnama.staff s JOIN jamatnama.staff_sessions t ON t.staff_id=s.id WHERE t.token_hash=$1 AND t.expires>$2 AND s.active",
     [hash(token), Date.now()],
   );
-  return rows[0] ? { id: rows[0].id, username: rows[0].username, role: "moderator" } : null;
+  const row = rows[0];
+  return row
+    ? { actor: { id: row.id, username: row.username, role: "moderator" }, expiresAt: Number(row.expires) }
+    : null;
 }
-export async function currentActor(): Promise<Actor | null> {
+export async function staffIdentity(token: string): Promise<Actor | null> {
+  return (await staffSession(token))?.actor ?? null;
+}
+/** The signed-in actor and when their session ends, so the panel can sign out on time. */
+export async function currentSession(): Promise<ActorSession | null> {
   if (!productionReady() || !process.env.SESSION_SECRET) return null;
   const token = (await cookies()).get("jamatnama_admin")?.value;
   if (!token) return null;
-  if (await sessionValid(token)) return { id: "owner", username: "superadmin", role: "superadmin" };
-  return staffIdentity(token);
+  const superadminExpiry = await superadminSessionExpiry(token);
+  if (superadminExpiry !== null) return { actor: SUPERADMIN, expiresAt: superadminExpiry };
+  return staffSession(token);
+}
+export async function currentActor(): Promise<Actor | null> {
+  return (await currentSession())?.actor ?? null;
 }
 /** Pass the transaction client so the audit entry commits or rolls back with the change it records. */
 export async function audit(actor: Actor, action: string, target = "", detail = "", client: Queryable = pool()) {
