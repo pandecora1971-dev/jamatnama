@@ -384,9 +384,9 @@ export default function Admin() {
                 )}
                 <button
                   className="jwr-button"
-                  disabled={busy}
+                  disabled={busy || (!!siteKey && !botToken)}
                 >
-                  {busy ? "যাচাই হচ্ছে…" : "লগইন করুন →"}
+                  {busy ? "যাচাই হচ্ছে…" : siteKey && !botToken ? "আগে \"Verify you are human\" টিক দিন" : "লগইন করুন →"}
                 </button>
               </>
             ) : (
