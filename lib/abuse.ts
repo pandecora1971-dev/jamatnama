@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { sameSiteHost } from "./production-config.mjs";
 import { rateLimit } from "./db";
 import {
   cookieOptions,
@@ -94,7 +95,7 @@ export async function verifyBot(token: unknown, action: string) {
     return (
       result.success === true &&
       result.action === action &&
-      result.hostname === new URL(process.env.PUBLIC_ORIGIN).hostname
+      typeof result.hostname === "string" && sameSiteHost(result.hostname, process.env.PUBLIC_ORIGIN)
     );
   } catch {
     return false;

@@ -7,7 +7,7 @@ import {
 } from "node:crypto";
 import { promisify } from "node:util";
 import { query, pool, databaseUnavailable, type Queryable } from "./db";
-import { productionReady } from "./production-config.mjs";
+import { productionReady, matchesPublicOrigin } from "./production-config.mjs";
 import { logError } from "./log";
 import { cookies } from "next/headers";
 export const hash = (s: string) => createHash("sha256").update(s).digest("hex");
@@ -77,7 +77,7 @@ export function sameOrigin(req: Request) {
   const origin = req.headers.get("origin");
   if (!origin) return process.env.NODE_ENV !== "production";
   try {
-    if (process.env.PUBLIC_ORIGIN) return origin === process.env.PUBLIC_ORIGIN;
+    if (process.env.PUBLIC_ORIGIN) return matchesPublicOrigin(origin, process.env.PUBLIC_ORIGIN);
     if (process.env.NODE_ENV === "production") return false;
     const parsed = new URL(origin);
     return ["http:", "https:"].includes(parsed.protocol) &&
