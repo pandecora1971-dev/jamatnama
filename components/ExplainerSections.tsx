@@ -10,7 +10,7 @@ export function HowItHelps() {
       <div className="jwr-shell">
         <div className="story-heading story-reveal">
           <div>
-            <span className="story-eyebrow">কেন জামাতনামা</span>
+            <span className="story-eyebrow">কেন জামায়াতনামা</span>
             <h2 id="why-title">
               আলাদা ঘটনা।
               <br />
@@ -19,7 +19,7 @@ export function HowItHelps() {
           </div>
           <p>
             ধর্মের দোহাই দিয়ে বৈষম্য বা হয়রানি করা হলে তার সময়, স্থান ও প্রমাণ
-            নথিবদ্ধ করা জরুরি। জামাতনামায় পর্যালোচনা হয় নির্দিষ্ট আচরণ,
+            নথিবদ্ধ করা জরুরি। জামায়াতনামায় পর্যালোচনা হয় নির্দিষ্ট আচরণ,
             ঘটনার প্রেক্ষাপট ও প্রমাণের ভিত্তিতে। সব বিশ্বাসের মানুষের
             সমান মর্যাদা ও অধিকার আছে।
           </p>

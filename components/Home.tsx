@@ -367,7 +367,7 @@ export default function Home() {
             >
               <span className="jm-brand-symbol" aria-hidden="true">✳</span>
               <span>
-                জামাতনামা<i>′</i>
+                জামায়াতনামা<i>′</i>
               </span>
               <small>⌄</small>
             </button>
@@ -773,7 +773,7 @@ export default function Home() {
       <footer className="jwr-site-footer">
         <div className="jwr-shell">
           <a className="jwr-brand" href="#content">
-            জামাতনামা<i>′</i>
+            জামায়াতনামা<i>′</i>
           </a>
           <p>জনস্বার্থমূলক পরিচয়বিহীন রিপোর্টিং প্ল্যাটফর্ম।</p>
           <nav>

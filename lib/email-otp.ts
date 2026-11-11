@@ -27,7 +27,7 @@ export async function sendOtpEmail(email: string, code: string): Promise<boolean
         subject: `আপনার JAMATNAMA অ্যাডমিন লগইন ওটিপি: ${code}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 10px; background-color: #ffffff;">
-            <h2 style="color: #dc2626; margin-top: 0; font-size: 20px;">জামাতনামা (JAMATNAMA) অ্যাডমিন লগইন</h2>
+            <h2 style="color: #dc2626; margin-top: 0; font-size: 20px;">জামায়াতনামা (JAMATNAMA) অ্যাডমিন লগইন</h2>
             <p style="color: #334155; font-size: 15px; line-height: 1.5;">আপনার অ্যাডমিন প্যানেলে লগইন করার জন্য নিচের ৬ সংখ্যার ওটিপি (OTP) কোডটি ব্যবহার করুন:</p>
             <div style="background: #f8fafc; border: 2px dashed #cbd5e1; padding: 18px; text-align: center; font-size: 34px; font-weight: bold; letter-spacing: 8px; color: #0f172a; border-radius: 8px; margin: 24px 0;">
               ${code}

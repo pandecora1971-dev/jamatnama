@@ -330,7 +330,7 @@ export default function Admin() {
     <main className="admin-page">
       <header className="admin-header">
         <a href="/" className="jwr-brand">
-          জামাতনামা<i>′</i>
+          জামায়াতনামা<i>′</i>
         </a>
         <span>অভিযোগ পর্যালোচনা</span>
         {auth && (
