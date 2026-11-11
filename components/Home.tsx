@@ -396,7 +396,6 @@ export default function Home() {
                 >
                   নিরাপত্তা ও গোপনীয়তা
                 </button>
-                <a href="/admin">পর্যালোচনা প্যানেল ↗</a>
               </div>
             )}
           </div>

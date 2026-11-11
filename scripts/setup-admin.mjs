@@ -23,7 +23,7 @@ writeFileSync(
 );
 writeFileSync(
   ".admin-access.txt",
-  `অ্যাডমিন পৃষ্ঠা: http://127.0.0.1:3000/admin\nপাসওয়ার্ড: ${password}\nএটি শুধু আপনার কম্পিউটারের জন্য। অন্য কারও সঙ্গে শেয়ার করবেন না।\n`,
+  `অ্যাডমিন পৃষ্ঠা: http://127.0.0.1:3000/msrotsntmdhfjjfdjvfvbnnjnjdsnmkjhf\nপাসওয়ার্ড: ${password}\nএটি শুধু আপনার কম্পিউটারের জন্য। অন্য কারও সঙ্গে শেয়ার করবেন না।\n`,
   { mode: 0o600 },
 );
 console.log(
