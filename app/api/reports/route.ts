@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { json, sameOrigin, serverFailure } from "@/lib/security";
-import { reportSchema } from "@/lib/validation";
+import { reportSchema, accusedPhotosSchema } from "@/lib/validation";
 import { limitedJson } from "@/lib/uploads";
 import { LIMITS, requestLimit, throttled } from "@/lib/abuse";
 import { productionReady } from "@/lib/production-config.mjs";
@@ -46,7 +46,9 @@ export async function POST(req: Request) {
     if (!parsed.success) return json({ error: parsed.error.issues[0].message }, 400);
     const files = filesSchema.safeParse(body.fileIds ?? []);
     if (!files.success) return json({ error: "ফাইলের তালিকা সঠিক নয়।" }, 400);
-    return json(await finalizeSubmission(String(body.token), parsed.data, files.data), 201);
+    const photos = accusedPhotosSchema.safeParse(body.accusedPhotos ?? []);
+    if (!photos.success) return json({ error: photos.error.issues[0]?.message || "ছবির তালিকা সঠিক নয়।" }, 400);
+    return json(await finalizeSubmission(String(body.token), parsed.data, files.data, photos.data), 201);
   } catch (error) {
     if (error instanceof UploadError)
       return json({ error: error.message, code: error.code, fileId: error.fileId }, error.status);

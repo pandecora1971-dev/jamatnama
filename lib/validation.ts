@@ -20,6 +20,13 @@ export const accusedSchema = z
       ),
   )
   .max(10, "সর্বোচ্চ ১০ জন অভিযুক্তের তথ্য যোগ করা যাবে।");
+/** Which uploaded file is a photo of which accused person (index into report.accused). */
+export const accusedPhotosSchema = z
+  .array(z.object({ accused: z.number().int().min(0).max(9), fileId: z.string().regex(/^[a-f0-9]{48}$/) }))
+  .max(10)
+  .refine((photos) => new Set(photos.map((p) => p.accused)).size === photos.length, "প্রতিজনের জন্য একটি ছবি দিন।")
+  .refine((photos) => new Set(photos.map((p) => p.fileId)).size === photos.length, "একই ছবি দুজনের জন্য দেওয়া যাবে না।");
+export type AccusedPhoto = z.infer<typeof accusedPhotosSchema>[number];
 export const sourceLinksSchema = z
   .array(
     z

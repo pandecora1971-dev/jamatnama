@@ -57,17 +57,25 @@ export default function ReportForm() {
       if (v) facts[field.key] = v;
       form.delete(`fact_${field.key}`);
     }
-    const accused = accusedRows
+    const people = accusedRows
       .map((id) => {
         const name = String(form.get(`accused_name_${id}`) || "").trim();
         const information = String(
           form.get(`accused_information_${id}`) || "",
         ).trim();
+        const photo = form.get(`accused_photo_${id}`);
         form.delete(`accused_name_${id}`);
         form.delete(`accused_information_${id}`);
-        return { name, information };
+        form.delete(`accused_photo_${id}`);
+        return { name, information, photo: photo instanceof File && photo.size > 0 ? photo : null };
       })
-      .filter((person) => person.name || person.information);
+      .filter((person) => person.name || person.information || person.photo);
+    if (people.some((person) => person.photo && !person.name && !person.information)) {
+      setError("ছবির সঙ্গে দোষীর নাম বা প্রাসঙ্গিক তথ্য লিখুন।");
+      setBusy(false);
+      return;
+    }
+    const accused = people.map(({ name, information }) => ({ name, information }));
     const report = {
       category: form.get("category"),
       title: form.get("title"),
@@ -89,6 +97,27 @@ export default function ReportForm() {
     const files = form
       .getAll("evidence")
       .filter((x): x is File => x instanceof File && x.size > 0);
+    // Accused photos travel as ordinary evidence files; remember which file shows whom.
+    const photoSlots: Array<{ accused: number; file: number }> = [];
+    for (const [index, person] of people.entries()) {
+      if (!person.photo) continue;
+      photoSlots.push({ accused: index, file: files.length });
+      files.push(person.photo);
+    }
+    const photoProblem = photoSlots.some(({ file }) => MIME_TYPES[canonicalMime(files[file].type, files[file].name) || ""]?.kind !== "image")
+      ? "দোষীর ছবি শুধু JPG, PNG বা WebP হতে পারে।"
+      : files.length > limits.maxFiles
+        ? `প্রমাণ ও দোষীর ছবি মিলিয়ে সর্বোচ্চ ${bn(limits.maxFiles)}টি ফাইল দিন।`
+        : photoSlots.some(({ file }) => files[file].size > limits.maxBytes.image)
+          ? "দোষীর একটি ছবি অনুমোদিত আকারের চেয়ে বড়।"
+          : files.reduce((n, f) => n + f.size, 0) > limits.maxTotalBytes
+            ? "ফাইলগুলোর মোট আকার অনুমোদিত সীমার বেশি।"
+            : "";
+    if (photoProblem) {
+      setError(photoProblem);
+      setBusy(false);
+      return;
+    }
     const leaving = (event: BeforeUnloadEvent) => event.preventDefault();
     window.addEventListener("beforeunload", leaving);
     try {
@@ -118,7 +147,8 @@ export default function ReportForm() {
       setStage("রিপোর্ট জমা হচ্ছে…");
       setProgress(null);
       // Safe to repeat: the same intent always returns the same report and receipt.
-      const d = await postJson("/api/reports", { token: intent.token, report, fileIds });
+      const accusedPhotos = photoSlots.map(({ accused, file }) => ({ accused, fileId: fileIds[file] }));
+      const d = await postJson("/api/reports", { token: intent.token, report, fileIds, accusedPhotos });
       setReceipt(d.receipt);
     } catch (e) {
       setError(e instanceof Error ? e.message : "জমা দেওয়া যায়নি।");
@@ -323,6 +353,16 @@ export default function ReportForm() {
                     rows={3}
                     placeholder="পদবি, সংগঠন, ঘটনায় ভূমিকা ও শনাক্ত করার প্রাসঙ্গিক তথ্য"
                   />
+                </label>
+                <label>
+                  দোষীর ছবি {bn(index + 1)} (অতিরিক্ত)
+                  <input
+                    type="file"
+                    name={`accused_photo_${id}`}
+                    accept="image/jpeg,image/png,image/webp"
+                    disabled={!uploadsOpen}
+                  />
+                  <small>JPG, PNG বা WebP। প্রমাণের ফাইলের সঙ্গে গণনা হবে; শুধু পর্যালোচক দেখতে পারবেন।</small>
                 </label>
               </div>
             ))}

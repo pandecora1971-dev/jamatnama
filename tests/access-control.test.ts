@@ -75,7 +75,7 @@ test("application roles carry timeouts and no elevated attributes", async () => 
 });
 test("migrations are versioned, checksummed and not re-applied", async () => {
   const { rows } = await admin.query("SELECT version FROM public.jamatnama_schema_migrations ORDER BY version");
-  assert.deepEqual(rows.map((r) => r.version), ["0001_schema.sql", "0002_access_control.sql"]);
+  assert.deepEqual(rows.map((r) => r.version), ["0001_schema.sql", "0002_access_control.sql", "0003_accused_photos.sql"]);
 });
 test("common public queries use their indexes at realistic volume, including Bangla search", async () => {
   const client = await admin.connect();

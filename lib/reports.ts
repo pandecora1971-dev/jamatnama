@@ -196,7 +196,8 @@ export async function insertReport(client: Queryable, id: string, receiptHash: s
 }
 
 type AdminRow = PublicRow & { review_note: string; updated_at: string };
-export type EvidenceSummary = { id: string; report_id: string; mime: string; size_bytes: number; state: string };
+/** accused_position is set when the file is a photo of that accused person. */
+export type EvidenceSummary = { id: string; report_id: string; mime: string; size_bytes: number; state: string; accused_position: number | null };
 export async function listForReview(status: Report["status"], limit: number, cursor?: { createdAt: string; id: string } | null, q?: string) {
   const params: unknown[] = [status];
   const where = ["status=$1"];
@@ -220,7 +221,7 @@ export async function listForReview(status: Report["status"], limit: number, cur
   const [links, accused, evidence] = await Promise.all([
     query<{ report_id: string; url: string }>("SELECT report_id,url FROM jamatnama.source_links WHERE report_id=ANY($1) ORDER BY report_id,position", [ids]),
     query<AccusedPerson & { report_id: string }>("SELECT report_id,name,information FROM jamatnama.accused WHERE report_id=ANY($1) ORDER BY report_id,position", [ids]),
-    query<EvidenceSummary>("SELECT id,report_id,mime,size_bytes::float8 AS size_bytes,state FROM jamatnama.evidence WHERE report_id=ANY($1) ORDER BY created_at,id", [ids]),
+    query<EvidenceSummary>("SELECT id,report_id,mime,size_bytes::float8 AS size_bytes,state,accused_position FROM jamatnama.evidence WHERE report_id=ANY($1) ORDER BY created_at,id", [ids]),
   ]);
   const last = page[page.length - 1];
   return {

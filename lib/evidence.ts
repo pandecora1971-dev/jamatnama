@@ -14,6 +14,7 @@ import { objectStore } from "./r2";
 import { insertReport, type NewReport } from "./reports";
 import { audit, hash, random, sign, SYSTEM_ACTOR, type Actor } from "./security";
 import { today } from "./shared";
+import type { AccusedPhoto } from "./validation";
 
 // Lifecycle: incoming/<intent>/<file>  browser PUT, signed for exact type and length
 //            quarantine/<file>         immutable server-side copy; validated at finalize, scanned by the worker
@@ -236,7 +237,7 @@ export type SubmissionResult = { id: string; receipt: string; status: string };
  * Retry-safe and one-time: the first success binds the intent to one report. Any repeat returns
  * that same report and receipt and can never create a second report or attach other files.
  */
-export async function finalizeSubmission(token: string, report: NewReport, fileIds: string[]): Promise<SubmissionResult> {
+export async function finalizeSubmission(token: string, report: NewReport, fileIds: string[], accusedPhotos: AccusedPhoto[] = []): Promise<SubmissionResult> {
   const intent = await loadIntent(token);
   const done = (id: string): SubmissionResult => ({ id, receipt: receiptFor(token), status: "pending" });
   if (intent.report_id) return done(intent.report_id);
@@ -251,6 +252,14 @@ export async function finalizeSubmission(token: string, report: NewReport, fileI
     if (file.state !== "issued") throw new UploadError(422, "file_rejected", "একটি ফাইল আগেই বাতিল হয়েছে। ফর্মটি আবার জমা দিন।", file.id);
     return file;
   });
+  // A photo must be one of this submission's image files and name a person in this report.
+  const photoOf = new Map<string, number>();
+  for (const photo of accusedPhotos) {
+    const file = chosen.find((f) => f.id === photo.fileId);
+    if (!file || !file.mime.startsWith("image/") || photo.accused >= report.accused.length)
+      throw new UploadError(422, "accused_photo", "দোষীর ছবি শুধু JPG, PNG বা WebP হতে পারে এবং একজন দোষীর সঙ্গে যুক্ত থাকতে হবে।", photo.fileId);
+    photoOf.set(file.id, photo.accused);
+  }
   await Promise.all(chosen.map(quarantineFile));
   const usedBytes = chosen.reduce((sum, file) => sum + Number(file.size_bytes), 0);
   return transaction(async (client) => {
@@ -260,8 +269,8 @@ export async function finalizeSubmission(token: string, report: NewReport, fileI
     await insertReport(client, id, hash(receiptFor(token)), report, now);
     for (const file of chosen) {
       await client.query(
-        "INSERT INTO jamatnama.evidence(id,report_id,mime,size_bytes,object_key,state,origin,created_at) VALUES($1,$2,$3,$4,$5,'pending_scan','upload',$6)",
-        [file.id, id, file.mime, file.size_bytes, `quarantine/${file.id}`, now],
+        "INSERT INTO jamatnama.evidence(id,report_id,mime,size_bytes,object_key,state,origin,created_at,accused_position) VALUES($1,$2,$3,$4,$5,'pending_scan','upload',$6,$7)",
+        [file.id, id, file.mime, file.size_bytes, `quarantine/${file.id}`, now, photoOf.get(file.id) ?? null],
       );
       await client.query("UPDATE jamatnama.upload_files SET state='attached' WHERE id=$1", [file.id]);
     }

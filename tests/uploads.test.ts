@@ -272,3 +272,33 @@ test("image bytes keep EXIF only in quarantine: nothing is served until the scan
   const { rows } = await admin.query("SELECT state FROM jamatnama.evidence WHERE id=$1", [plan.id]);
   assert.equal(rows[0].state, "pending_scan");
 });
+
+const png = () => sharp({ create: { width: 8, height: 8, channels: 3, background: "#888" } }).png().toBuffer();
+/** One intent carrying a PDF and a PNG, both uploaded. */
+const pdfAndPhoto = async () => {
+  const pdf = samples.pdf(), photo = await png();
+  const intent = await createIntent([{ mime: "application/pdf", size: pdf.length }, { mime: "image/png", size: photo.length }]);
+  const [pdfPlan, photoPlan] = intent.files as unknown as PutPlan[];
+  assert.equal((await put(pdfPlan, pdf)).status, 200);
+  assert.equal((await put(photoPlan, photo)).status, 200);
+  return { intent, pdfPlan, photoPlan };
+};
+test("an accused photo is stored as private evidence linked to that person", async () => {
+  const { intent, pdfPlan, photoPlan } = await pdfAndPhoto();
+  const result = await finalizeSubmission(intent.token, validReport(), [pdfPlan.id, photoPlan.id], [{ accused: 0, fileId: photoPlan.id }]);
+  const { rows } = await admin.query("SELECT id,accused_position,state FROM jamatnama.evidence WHERE report_id=$1 ORDER BY id", [result.id]);
+  const byId = Object.fromEntries(rows.map((r) => [r.id, r]));
+  assert.equal(byId[photoPlan.id].accused_position, 0);
+  assert.equal(byId[pdfPlan.id].accused_position, null);
+  assert.equal(byId[photoPlan.id].state, "pending_scan");
+});
+test("accused photos must be this submission's images and name a listed person", async () => {
+  const { intent, pdfPlan, photoPlan } = await pdfAndPhoto();
+  const files = [pdfPlan.id, photoPlan.id];
+  // A PDF cannot be a photo, the person must exist, and the file must belong to this submission.
+  await assert.rejects(finalizeSubmission(intent.token, validReport(), files, [{ accused: 0, fileId: pdfPlan.id }]), code("accused_photo"));
+  await assert.rejects(finalizeSubmission(intent.token, validReport(), files, [{ accused: 1, fileId: photoPlan.id }]), code("accused_photo"));
+  await assert.rejects(finalizeSubmission(intent.token, validReport(), [pdfPlan.id], [{ accused: 0, fileId: photoPlan.id }]), code("accused_photo"));
+  const { rows } = await admin.query("SELECT count(*)::int n FROM jamatnama.reports");
+  assert.equal(rows[0].n, 0);
+});

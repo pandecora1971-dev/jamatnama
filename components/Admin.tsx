@@ -11,7 +11,7 @@ type PrivateReport = Report & {
   sourceLinks: string[];
   reviewFlags: string[];
 };
-type Evidence = { id: string; report_id: string; mime: string; size_bytes: number; state: string };
+type Evidence = { id: string; report_id: string; mime: string; size_bytes: number; state: string; accused_position: number | null };
 const evidenceStates: Record<string, string> = {
   pending_scan: "নিরাপত্তা পরীক্ষা চলছে; এখনও খোলা যাবে না",
   infected: "ক্ষতিকর উপাদান পাওয়া গেছে; ফাইলটি সরানো হয়েছে",
@@ -42,6 +42,8 @@ function Review({
     [reviewed, setReviewed] = useState(false),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
+  // Accused photos are listed beside their person, not as general evidence.
+  const files = evidence.filter((f) => f.accused_position === null || f.accused_position === undefined);
   async function save(status: Report["status"]) {
     setBusy(true);
     setError("");
@@ -96,14 +98,25 @@ function Review({
             শুধু পর্যালোচকের জন্য; এই আলাদা তথ্য জনসাধারণের তালিকায় প্রকাশিত হয়
             না।
           </p>
-          {r.accused.map((person, i) => (
+          {r.accused.map((person, i) => {
+            const photo = evidence.find((f) => f.accused_position === i);
+            return (
             <div key={i}>
               <strong>
                 {bn(i + 1)}. {person.name || "নাম জানা নেই"}
               </strong>
               {person.information && <p>{person.information}</p>}
+              {photo &&
+                (photo.state === "clean" ? (
+                  <a className="evidence-link" href={`/api/admin/evidence/${photo.id}`} target="_blank" rel="noopener noreferrer">
+                    দোষী {bn(i + 1)}-এর ছবি খুলুন ↗
+                  </a>
+                ) : (
+                  <p className="muted">দোষী {bn(i + 1)}-এর ছবি: {evidenceStates[photo.state] || photo.state}</p>
+                ))}
             </div>
-          ))}
+            );
+          })}
         </section>
       )}
       {r.reviewFlags?.length > 0 && (
@@ -130,9 +143,9 @@ function Review({
           ))}
       </div>
       <p className="muted">
-        প্রমাণ: {bn(evidence.length)}টি ফাইল · শুধু পর্যালোচকের জন্য
+        প্রমাণ: {bn(files.length)}টি ফাইল · শুধু পর্যালোচকের জন্য
       </p>
-      {evidence.map((f, i) =>
+      {files.map((f, i) =>
         f.state === "clean" ? (
           <a
             key={f.id}
