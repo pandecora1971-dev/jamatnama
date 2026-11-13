@@ -282,6 +282,20 @@ export default function Home() {
     if (revision !== null) void loadList(revision, filter, PAGE).catch(() => setLive(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
+  // The list leaves out source links; fetch them when a report is opened.
+  const detailId = detail && !detail.demo && !detail.sourceLinks ? detail.id : null;
+  useEffect(() => {
+    if (!detailId) return;
+    const controller = new AbortController();
+    fetch(`/api/reports/${encodeURIComponent(detailId)}`, { signal: controller.signal })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        const links: string[] = d?.report?.sourceLinks ?? [];
+        setDetail((current) => (current?.id === detailId ? { ...current, sourceLinks: links } : current));
+      })
+      .catch(() => { });
+    return () => controller.abort();
+  }, [detailId]);
   useEffect(() => {
     const id = new URLSearchParams(location.search).get("report");
     if (!id) return;

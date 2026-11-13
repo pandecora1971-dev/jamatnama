@@ -151,7 +151,7 @@ function Review({
       )}
       {r.sourceLinks?.length > 0 && (
         <section className="admin-accused">
-          <h3>সংবাদসূত্র · শুধু পর্যালোচকের জন্য</h3>
+          <h3>সংবাদসূত্র · প্রকাশিত হলে সবাই দেখতে পাবে</h3>
           {r.sourceLinks.map((url, i) => (
             <p key={i}>
               <a

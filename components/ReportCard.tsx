@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { bn, date, displayDescription, displayTitle, placeLine, type Report } from "@/lib/shared";
+import LinkedText, { ExternalLink } from "./LinkedText";
 export default function ReportCard({
   report: r,
   onOpen,
@@ -43,7 +44,23 @@ export default function ReportCard({
           {title}
         </button>
       </h3>
-      {description && <p className={detail ? "full-description" : "jwr-card-excerpt"}>{description}</p>}
+      {description && (
+        <p className={detail ? "full-description" : "jwr-card-excerpt"}>
+          {detail ? <LinkedText text={description} /> : description}
+        </p>
+      )}
+      {detail && r.sourceLinks && r.sourceLinks.length > 0 && (
+        <div className="source-links">
+          <h4>সংবাদসূত্র</h4>
+          <ul>
+            {r.sourceLinks.map((url, i) => (
+              <li key={i}>
+                <span>Link:</span> <ExternalLink href={url}>{url}</ExternalLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {!detail && (
         <button className="jwr-read-more" onClick={onOpen}>
           বিস্তারিত পড়ুন →

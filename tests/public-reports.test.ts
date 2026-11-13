@@ -40,20 +40,25 @@ test("keyset pagination returns every published report once, in order, across pa
 test("public responses never contain private fields, unpublished reports or accused details", async () => {
   const id = await seedReport({ receipt_hash: "a".repeat(64), review_note: "গোপন-নোট-পরীক্ষা" });
   await admin.query("INSERT INTO jamatnama.accused(report_id,position,name,information) VALUES($1,0,'গোপন-অভিযুক্ত','গোপন-তথ্য')", [id]);
-  await admin.query("INSERT INTO jamatnama.source_links(report_id,position,url) VALUES($1,0,'https://private.example/x')", [id]);
+  await admin.query("INSERT INTO jamatnama.source_links(report_id,position,url) VALUES($1,0,'https://news.example/x')", [id]);
   const hidden = await seedReport({ status: "pending", title: "প্রকাশ-না-হওয়া-শিরোনাম-পরীক্ষা" });
-  const responses = await Promise.all([
+  await admin.query("INSERT INTO jamatnama.source_links(report_id,position,url) VALUES($1,0,'https://pending.example/x')", [hidden]);
+  const [list, detail, stats] = await Promise.all([
     getReports(url("/api/reports")),
     getDetail(url(`/api/reports/${id}`), { params: Promise.resolve({ id }) }),
     getStats(url("/api/stats")),
   ]);
-  for (const response of responses) {
-    const text = await response.text();
-    for (const secret of ["গোপন", "aaaaaaaa", "receipt", "fingerprint", "review", "accused", "private.example", "প্রকাশ-না-হওয়া", "search_text"])
-      assert.equal(text.includes(secret), false, secret);
-  }
-  const detail = await getDetail(url(`/api/reports/${hidden}`), { params: Promise.resolve({ id: hidden }) });
-  assert.equal(detail.status, 404);
+  const texts = { list: await list.text(), detail: await detail.text(), stats: await stats.text() };
+  for (const [name, text] of Object.entries(texts))
+    for (const secret of ["গোপন", "aaaaaaaa", "receipt", "fingerprint", "review", "accused", "pending.example", "প্রকাশ-না-হওয়া", "search_text"])
+      assert.equal(text.includes(secret), false, `${name}: ${secret}`);
+  // News links are public on a published report's own page, and only there.
+  assert.deepEqual(JSON.parse(texts.detail).report.sourceLinks, ["https://news.example/x"]);
+  assert.equal(texts.list.includes("news.example"), false);
+  assert.equal(texts.stats.includes("news.example"), false);
+  const pending = await getDetail(url(`/api/reports/${hidden}`), { params: Promise.resolve({ id: hidden }) });
+  assert.equal(pending.status, 404);
+  assert.equal((await pending.text()).includes("pending.example"), false);
 });
 test("filters and search run on the server, treat wildcards literally, and map legacy categories", async () => {
   await seedReport({ category: "খুন", title: "প্রথম কাল্পনিক ঘটনার শিরোনাম", district: "রাজশাহী", division: "রাজশাহী", upazila: "বাঘা", incident_date: "2026-01-05" });

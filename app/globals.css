@@ -4153,6 +4153,27 @@ section[id] {
   line-height: 1.9 !important;
   margin-bottom: 20px !important;
 }
+.detail-card .source-links a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+}
+.detail-card .source-links {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.detail-card .source-links h4 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+.detail-card .source-links ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 .report-facts p {
   font-size: 12px;
   display: flex;

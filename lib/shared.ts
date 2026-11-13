@@ -85,6 +85,8 @@ export type Report = {
   supports: number;
   demo?: boolean;
   evidenceCount?: number;
+  /** Only on a single published report; the list leaves them out. */
+  sourceLinks?: string[];
 };
 export type PublicStats = {
   total: number;
