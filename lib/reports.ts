@@ -8,6 +8,8 @@ import {
   type AccusedPerson,
   type PublicStats,
   type Report,
+  UNTITLED,
+  NO_DESCRIPTION,
 } from "./shared";
 import { reportSchema } from "./validation";
 
@@ -168,7 +170,7 @@ export async function publicStats(filter: ReportFilter): Promise<PublicStats> {
 
 export type NewReport = z.infer<typeof reportSchema>;
 export const reportFingerprint = (d: Pick<NewReport, "category" | "title" | "description" | "district" | "incidentDate">, id?: string) => {
-  const isGeneric = !d.title || d.title === "অনির্ধারিত শিরোনাম" || !d.description || d.description === "বিস্তারিত বিবরণ দেওয়া হয়নি।";
+  const isGeneric = !d.title || d.title === UNTITLED || !d.description || d.description === NO_DESCRIPTION;
   return hash([isGeneric ? (id || "") : "", d.category, d.title.trim().toLowerCase(), d.description.trim().toLowerCase(), d.district, d.incidentDate].join("|"));
 };
 export async function fingerprintExists(fingerprint: string) {

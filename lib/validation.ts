@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { categories, conditionalFields, normalizeWard, today } from "./shared";
+import { categories, conditionalFields, normalizeWard, today, UNTITLED, NO_DESCRIPTION } from "./shared";
 import locations from "../public/data/locations.json";
 export const accusedSchema = z
   .array(
@@ -54,13 +54,13 @@ export const reportSchema = z
       .trim()
       .max(180)
       .default("")
-      .transform((v) => v || "অনির্ধারিত শিরোনাম"),
+      .transform((v) => v || UNTITLED),
     description: z
       .string()
       .trim()
       .max(5000)
       .default("")
-      .transform((v) => v || "বিস্তারিত বিবরণ দেওয়া হয়নি।"),
+      .transform((v) => v || NO_DESCRIPTION),
     division: z.string().min(1, "বিভাগ নির্বাচন করুন।"),
     district: z.string().min(1, "জেলা নির্বাচন করুন।"),
     upazila: z.string().default(""),

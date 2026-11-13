@@ -55,6 +55,18 @@ export const conditionalFields = fields as Record<
     settings: { unit: string };
   }>
 >;
+/** Stored when a reporter leaves the title or description blank; never shown to readers as-is. */
+export const UNTITLED = "অনির্ধারিত শিরোনাম";
+// Precomposed U+09DF, exactly as already stored in existing reports.
+export const NO_DESCRIPTION = "বিস্তারিত বিবরণ দেওয়া হয়নি।";
+const sameText = (a: string, b: string) => a.trim().normalize("NFC") === b.normalize("NFC");
+export const displayTitle = (r: Pick<Report, "title" | "category" | "district">) =>
+  r.title && !sameText(r.title, UNTITLED) ? r.title : [r.category, r.district].filter(Boolean).join(" · ");
+export const displayDescription = (r: Pick<Report, "description">) =>
+  r.description && !sameText(r.description, NO_DESCRIPTION) ? r.description : "";
+/** "ward area, ward N, upazila, district" without empty parts or stray commas. */
+export const placeLine = (r: Pick<Report, "ward" | "wardArea" | "upazila" | "district">) =>
+  [r.ward && r.wardArea ? `${r.wardArea}, ওয়ার্ড ${bn(Number(r.ward))}` : "", r.upazila, r.district].filter(Boolean).join(", ");
 export type AccusedPerson = { name: string; information: string };
 export type Report = {
   id: string;

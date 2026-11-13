@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { bn, date, type Report } from "@/lib/shared";
+import { bn, date, displayDescription, displayTitle, placeLine, type Report } from "@/lib/shared";
 export default function ReportCard({
   report: r,
   onOpen,
@@ -13,6 +13,8 @@ export default function ReportCard({
   const [supported, setSupported] = useState(false),
     [count, setCount] = useState<number | null>(null),
     [error, setError] = useState("");
+  const title = displayTitle(r),
+    description = displayDescription(r);
   async function support() {
     if (r.demo) {
       setError("এটি নমুনা। বাস্তব প্রকাশিত রিপোর্টে সমর্থন দেওয়া যাবে।");
@@ -38,12 +40,10 @@ export default function ReportCard({
       </div>
       <h3>
         <button className="jwr-card-title" onClick={onOpen}>
-          {r.title}
+          {title}
         </button>
       </h3>
-      <p className={detail ? "full-description" : "jwr-card-excerpt"}>
-        {r.description}
-      </p>
+      {description && <p className={detail ? "full-description" : "jwr-card-excerpt"}>{description}</p>}
       {!detail && (
         <button className="jwr-read-more" onClick={onOpen}>
           বিস্তারিত পড়ুন →
@@ -53,7 +53,7 @@ export default function ReportCard({
         className={`support-button ${supported ? "supported" : ""}`}
         onClick={support}
         disabled={supported}
-        aria-label={`${r.title} রিপোর্টে সমর্থন দিন`}
+        aria-label={`${title} রিপোর্টে সমর্থন দিন`}
       >
         {supported ? "✓ সমর্থন দিয়েছেন" : "△ এই রিপোর্টে সমর্থন দিন"}
         <b>{bn(count ?? r.supports)}</b>
@@ -65,7 +65,7 @@ export default function ReportCard({
       )}
       <footer>
         <span>
-          {r.ward && <>{r.wardArea}, ওয়ার্ড {bn(Number(r.ward))} · </>}{r.upazila}, {r.district} · {r.division} · {date(r.incidentDate)}
+          {[placeLine(r), r.division, date(r.incidentDate)].filter(Boolean).join(" · ")}
         </span>
         <span className="status-badge">{r.demo ? "নমুনা" : "প্রকাশিত"}</span>
       </footer>
