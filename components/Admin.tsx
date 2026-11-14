@@ -431,6 +431,10 @@ export default function Admin() {
               <>
                 <div style={{ background: "#f0fdf4", border: "1px solid #86efac", padding: "12px", borderRadius: "6px", color: "#166534", marginBottom: "16px", fontSize: "14px" }}>
                   ✉️ {otpMessage}
+                  <br />
+                  <small>
+                    ইমেইল আসতে কয়েক মিনিট লাগতে পারে; স্প্যাম ফোল্ডারও দেখুন। আবার কোড চাইলে শেষ ৩টি কোডের যেকোনোটি ১০ মিনিট পর্যন্ত কাজ করবে।
+                  </small>
                 </div>
                 <label>
                   ইমেইলে আসা ৬-সংখ্যার ওটিপি (OTP) কোড

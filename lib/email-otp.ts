@@ -46,17 +46,23 @@ export async function sendOtpEmail(email: string, code: string): Promise<boolean
   }
 }
 
+/** How many emailed codes can be valid at once for one account. */
+export const MAX_LIVE_CODES = 3;
+
 export async function createEmailOtp(account: string): Promise<string> {
   // Random 6-digit code from a cryptographic source
   const code = randomInt(100000, 1000000).toString();
   const bucketKey = `email_otp:${account}:${hash(code)}`;
   const expires = Date.now() + 10 * 60 * 1000; // 10 minutes
 
-  // Store in rate_limits table (clean up any previous expired ones)
-  await query("DELETE FROM jamatnama.rate_limits WHERE bucket LIKE $1 OR expires <= $2", [
-    `email_otp:${account}:%`,
-    Date.now(),
-  ]);
+  // Earlier codes stay valid until they expire (newest few only): an email that arrives
+  // late after the admin asked again must still work. Expired codes are removed.
+  await query("DELETE FROM jamatnama.rate_limits WHERE bucket LIKE 'email_otp:%' AND expires <= $1", [Date.now()]);
+  await query(
+    `DELETE FROM jamatnama.rate_limits WHERE bucket LIKE $1 AND bucket NOT IN (
+       SELECT bucket FROM jamatnama.rate_limits WHERE bucket LIKE $1 ORDER BY expires DESC LIMIT $2)`,
+    [`email_otp:${account}:%`, MAX_LIVE_CODES - 1],
+  );
   await query(
     "INSERT INTO jamatnama.rate_limits (bucket, count, expires) VALUES ($1, $2, $3)",
     [bucketKey, 0, expires]
@@ -85,8 +91,8 @@ export async function verifyEmailOtp(account: string, code: string): Promise<boo
     return false;
   }
 
-  // OTP is single-use: delete immediately upon verification
-  await query("DELETE FROM jamatnama.rate_limits WHERE bucket = $1", [bucketKey]);
+  // Single-use: a successful sign-in also retires every other outstanding code.
+  await query("DELETE FROM jamatnama.rate_limits WHERE bucket LIKE $1", [`email_otp:${account}:%`]);
   return true;
 }
 
